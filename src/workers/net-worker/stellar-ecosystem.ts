@@ -3,6 +3,7 @@
 import { FederationServer, StellarTomlResolver } from "stellar-sdk"
 import { AccountRecord } from "../../lib/stellar-expert"
 import { AssetRecord } from "../../lib/stellar-ticker"
+import { CurrencyCode, QuoteRecord } from "../../lib/currency-conversion"
 
 export async function fetchWellknownAccounts(testnet: boolean): Promise<AccountRecord[]> {
   const requestURL = testnet
@@ -66,4 +67,22 @@ export async function fetchStellarToml(domain: string): Promise<any> {
 
 export function resolveStellarAddress(address: string, options?: FederationServer.Options) {
   return FederationServer.resolve(address, options)
+}
+
+export async function fetchCryptoPrice(currencyCode: CurrencyCode, testnet: boolean) {
+  const baseURL = testnet
+    ? "https://api.satoshipay.io/testnet/coinmarketcap/v1/cryptocurrency/quotes/latest"
+    : "https://api.satoshipay.io/mainnet/coinmarketcap/v1/cryptocurrency/quotes/latest"
+
+  const requestURL = `${baseURL}?symbol=XLM&convert=${currencyCode}`
+
+  const response = await fetch(requestURL)
+
+  if (response.status >= 400) {
+    throw Error(`Bad response (${response.status}) from conversion rate endpoint`)
+  }
+
+  const json = await response.json()
+  const quoteRecord = json.data.XLM.quote[currencyCode] as QuoteRecord
+  return quoteRecord
 }
