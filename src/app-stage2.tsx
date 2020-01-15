@@ -7,6 +7,7 @@ import { VerticalLayout } from "./components/Layout/Box"
 import LinkHandler from "./components/LinkHandler"
 import ConnectionErrorListener from "./components/Toasts/ConnectionErrorListener"
 import NotificationContainer from "./components/Toasts/NotificationContainer"
+import TransactionRequestHandler from "./components/TransactionRequestHandler"
 import AccountPage from "./pages/account"
 import AllAccountsPage from "./pages/all-accounts"
 import CreateAccountPage from "./pages/create-account"
@@ -52,6 +53,7 @@ function Stage2() {
       <React.Suspense fallback={null}>
         <NotificationContainer />
         <ConnectionErrorListener />
+        <TransactionRequestHandler />
       </React.Suspense>
       <React.Suspense fallback={null}>
         {/* Notifications need to come after the -webkit-overflow-scrolling element on iOS */}
