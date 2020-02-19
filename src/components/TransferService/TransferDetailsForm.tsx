@@ -154,7 +154,7 @@ function TransferDetailsForm(props: TransferDetailsFormProps) {
         })
       )
     },
-    [actions.submitTransferFieldValues, amount, formValues]
+    [account.publicKey, actions, formValues, handleSubmission, props.state]
   )
 
   const methodMetadata = (() => {

@@ -452,13 +452,13 @@ function TransactionList(props: TransactionListProps) {
     return txResponse
       ? new Transaction(txResponse.envelope_xdr, props.account.testnet ? Networks.TESTNET : Networks.PUBLIC)
       : null
-  }, [openedTxHash, props.transactions])
+  }, [openedTxHash, props.account.testnet, props.transactions])
 
   const openTransaction = React.useCallback(
     (transactionHash: string) => {
       router.history.push(routes.showTransaction(props.account.id, transactionHash))
     },
-    [props.account, router.history.push]
+    [props.account.id, router.history]
   )
 
   const closeTransaction = React.useCallback(() => {
@@ -470,7 +470,7 @@ function TransactionList(props: TransactionListProps) {
         ;(document.activeElement as HTMLElement).blur()
       }
     }, 0)
-  }, [])
+  }, [props.account.id, router.history])
 
   const transactionListItems = React.useMemo(
     () => (
@@ -494,7 +494,7 @@ function TransactionList(props: TransactionListProps) {
         ))}
       </>
     ),
-    [props.account, props.transactions, openTransaction]
+    [props.transactions, props.account.publicKey, props.account.testnet, classes.listItem, openTransaction]
   )
 
   if (props.transactions.length === 0) {

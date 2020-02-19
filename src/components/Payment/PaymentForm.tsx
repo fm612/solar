@@ -142,7 +142,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         placeholder: "Description (optional)"
       })
     }
-  }, [formValues.destination, formValues.memoType, wellknownAccounts])
+  }, [formValues.destination, formValues.memoType, matchingWellknownAccount, wellknownAccounts])
 
   const isDisabled = !formValues.amount || Number.isNaN(Number.parseFloat(formValues.amount)) || !formValues.destination
 
@@ -181,7 +181,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         <QRReader onScan={handleQRScan} />
       </InputAdornment>
     ),
-    []
+    [handleQRScan]
   )
 
   const destinationInput = React.useMemo(
@@ -203,7 +203,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         }}
       />
     ),
-    [errors.destination, formValues.destination]
+    [errors.destination, formValues.destination, qrReaderAdornment]
   )
 
   const assetSelector = React.useMemo(
@@ -217,7 +217,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         value={formValues.asset}
       />
     ),
-    [formValues.asset, props.trustedAssets]
+    [formValues.asset, props.accountData.balances, props.testnet]
   )
 
   const priceInput = React.useMemo(
@@ -239,7 +239,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         }}
       />
     ),
-    [assetSelector, errors.amount, formValues.amount, isSmallScreen, spendableBalance.toString(), props.trustedAssets]
+    [assetSelector, errors.amount, formValues.amount, isSmallScreen, spendableBalance]
   )
 
   const memoInput = React.useMemo(
@@ -267,14 +267,7 @@ const PaymentForm = React.memo(function PaymentForm(props: PaymentFormProps) {
         }}
       />
     ),
-    [
-      errors.memoType,
-      errors.memoValue,
-      formValues.memoType,
-      formValues.memoValue,
-      memoMetadata.label,
-      memoMetadata.placeholder
-    ]
+    [errors.memoValue, formValues.memoType, formValues.memoValue, memoMetadata.label, memoMetadata.placeholder]
   )
 
   const dialogActions = React.useMemo(

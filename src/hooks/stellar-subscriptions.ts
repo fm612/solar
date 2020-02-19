@@ -47,7 +47,7 @@ function useDataSubscriptions<DataT, UpdateT>(
     })
 
     return () => subscriptions.forEach(subscription => unsubscribe(subscription))
-  }, [reducer, items])
+  }, [reducer, items, setRefreshCounter])
 
   return currentDataSets as DataT[]
 }
@@ -96,7 +96,7 @@ export function useLiveAccountDataSet(accountIDs: string[], testnet: boolean): A
           }
         }
       }),
-    [accountIDs.join(","), horizonURL]
+    [accountIDs, horizonURL, netWorker]
   )
 
   return useDataSubscriptions(applyAccountDataUpdate, items)
@@ -137,7 +137,7 @@ export function useLiveAccountOffers(accountID: string, testnet: boolean): Serve
         return netWorker.subscribeToOpenOrders(horizonURL, accountID)
       }
     }
-  }, [accountID, horizonURL])
+  }, [accountID, horizonURL, netWorker])
 
   return useDataSubscription(applyAccountOffersUpdate, get, set, observe)
 }
@@ -158,7 +158,7 @@ export function useLiveAccountEffects(accounts: Account[], handler: EffectHandle
     })
 
     return () => subscriptions.forEach(subscription => subscription.unsubscribe())
-  }, [accounts, mainnetHorizonURL, testnetHorizonURL])
+  }, [accounts, handler, mainnetHorizonURL, netWorker, testnetHorizonURL])
 }
 
 function applyOrderbookUpdate(prev: FixedOrderbookRecord, next: FixedOrderbookRecord) {
@@ -188,7 +188,7 @@ export function useLiveOrderbook(selling: Asset, buying: Asset, testnet: boolean
         return netWorker.subscribeToOrderbook(horizonURL, stringifyAsset(selling), stringifyAsset(buying))
       }
     }
-  }, [horizonURL, stringifyAsset(selling), stringifyAsset(buying)])
+  }, [buying, horizonURL, netWorker, selling])
 
   return useDataSubscription(applyOrderbookUpdate, get, set, observe)
 }
@@ -233,7 +233,7 @@ export function useLiveRecentTransactions(accountID: string, testnet: boolean): 
         return netWorker.subscribeToAccountTransactions(horizonURL, accountID)
       }
     }
-  }, [accountID, horizonURL])
+  }, [accountID, horizonURL, netWorker])
 
   return useDataSubscription(applyAccountTransactionsUpdate, get, set, observe)
 }

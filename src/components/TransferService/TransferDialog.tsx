@@ -94,7 +94,7 @@ function TransferDialog(props: TransferDialogProps) {
       )
       .map(assetInfo => assetInfo.asset)
       .concat(props.type === "deposit" ? [Asset.native()] : [])
-  }, [assetTransferInfos])
+  }, [assetTransferInfos, props.type])
 
   const contentProps = {
     ...props,

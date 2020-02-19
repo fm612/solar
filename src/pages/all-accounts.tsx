@@ -54,7 +54,7 @@ function AllAccountsPage() {
     updater.isUpdateAvailable().then(value => {
       setUpdateAvailable(value)
     })
-  }, [])
+  }, [updater])
 
   const startUpdate = React.useCallback(async () => {
     if (isUpdateAvailable && !updater.isUpdateStarted()) {
@@ -69,7 +69,7 @@ function AllAccountsPage() {
         setUpdateInProgress(false)
       }
     }
-  }, [updater, isUpdateAvailable])
+  }, [isUpdateAvailable, updater, showNotification])
 
   const updateButton = (
     <Tooltip title="Update available">
@@ -113,7 +113,17 @@ function AllAccountsPage() {
         }
       />
     ),
-    [isWidthMax450, isUpdateAvailable, isUpdateInProgress, networkSwitch, router, settings.showTestnet, testnetAccounts]
+    [
+      networkSwitch,
+      isWidthMax450,
+      settings.showTestnet,
+      testnetAccounts.length,
+      networkSwitchButton,
+      isUpdateAvailable,
+      isUpdateInProgress,
+      updateButton,
+      router.history
+    ]
   )
 
   return (
