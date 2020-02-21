@@ -73,6 +73,8 @@ function AccountHeaderCard(props: Props) {
   const handleBackNavigation = React.useCallback(() => {
     if (meta.account && matchesRoute(router.location.pathname, routes.accountSettings(meta.account.id))) {
       router.history.push(routes.account(meta.account.id))
+    } else if (meta.accountCreation) {
+      router.history.push(routes.routeUp(router.location.pathname))
     } else {
       router.history.push(routes.allAccounts())
     }

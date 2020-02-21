@@ -251,12 +251,6 @@ function AccountTitle(props: AccountTitleProps) {
     focusInput()
   }, [focusInput, inputRef])
 
-  React.useEffect(() => {
-    if (props.permanentlyEditing) {
-      focusInput()
-    }
-  }, [props.permanentlyEditing])
-
   const editActions = React.useMemo(
     () => (
       <>
