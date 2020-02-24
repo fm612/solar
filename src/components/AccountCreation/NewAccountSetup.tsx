@@ -30,21 +30,23 @@ const InitialSelection = React.memo(
     }, [props.onUpdateAccountCreation, props.testnet, router.history, routes.createAccount])
 
     return (
-      <VerticalLayout ref={ref} alignItems="center" justifyContent="space-evenly" margin="48px 0 24px" padding="0 8px">
-        <MainSelectionButton
-          label="Create account"
-          description="Create a new empty account"
-          onClick={createAccount}
-          style={{ marginBottom: 16 }}
-          Icon={AddIcon}
-        />
-        <MainSelectionButton
-          label="Import account"
-          description="Restore account from backup"
-          onClick={importAccount}
-          style={{ marginBottom: 16 }}
-          Icon={RestoreIcon}
-        />
+      <VerticalLayout ref={ref} alignItems="center" margin="48px 0 24px" padding="0 8px">
+        <VerticalLayout alignItems="stretch" margin="0 auto">
+          <MainSelectionButton
+            label="Create account"
+            description="Create a new empty account"
+            onClick={createAccount}
+            style={{ marginBottom: 16 }}
+            Icon={AddIcon}
+          />
+          <MainSelectionButton
+            label="Import account"
+            description="Restore account from backup"
+            onClick={importAccount}
+            style={{ marginBottom: 16 }}
+            Icon={RestoreIcon}
+          />
+        </VerticalLayout>
       </VerticalLayout>
     )
   })
