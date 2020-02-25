@@ -143,6 +143,7 @@ function TitleTextField(props: TitleTextFieldProps) {
   return (
     <TextField
       inputProps={{
+        className: classes.input,
         onClick: props.onClick,
         size: Math.max(length + 1, 4),
         style: {
@@ -203,7 +204,7 @@ function AccountTitle(props: AccountTitleProps) {
   const mode = props.permanentlyEditing ? "editing" : rawMode
   const name = props.permanentlyEditing ? props.name : rawName
 
-  const inputRef = React.createRef<HTMLInputElement>()
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
 
   React.useEffect(() => {
     return router.history.listen(() => {
@@ -213,9 +214,16 @@ function AccountTitle(props: AccountTitleProps) {
   }, [])
 
   const handleNameEditing = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value),
-    []
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setName(event.target.value)
+
+      if (props.permanentlyEditing) {
+        props.onRename(event.target.value)
+      }
+    },
+    [props.onRename, props.permanentlyEditing]
   )
+
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (event.key === "Enter") {
@@ -236,11 +244,13 @@ function AccountTitle(props: AccountTitleProps) {
     setMode("readonly")
     clearTextSelection()
   }, [props.onRename, name])
+
   const cancelRenaming = React.useCallback(() => {
     setName(props.name)
     setMode("readonly")
     clearTextSelection()
   }, [props.name])
+
   const focusInput = React.useCallback(() => {
     // Doesn't work on iOS, even leads to weird broken behavior
     if (inputRef.current && process.env.PLATFORM !== "ios") {
@@ -248,11 +258,13 @@ function AccountTitle(props: AccountTitleProps) {
       inputRef.current.focus()
     }
   }, [])
+
   const switchToEditMode = React.useCallback(() => {
     if (props.editable) {
       setMode("editing")
     }
-  }, [])
+  }, [props.editable])
+
   const toggleMode = React.useCallback(() => {
     setMode(prevMode => (prevMode === "editing" ? "readonly" : "editing"))
     focusInput()
